@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { MapPin } from 'lucide-react';
+
+const BangSaphanMap = () => {
+  // ข้อมูลจุดทิ้งขยะ (ข้อมูลสมมติ)
+  const trashPoints = [
+    { id: 1, name: "ตลาดบางสะพาน", x: 180, y: 150 },
+    { id: 2, name: "วัดเขาโบสถ์", x: 250, y: 120 },
+    { id: 3, name: "โรงเรียนบางสะพาน", x: 150, y: 200 },
+    { id: 4, name: "สวนสาธารณะ", x: 220, y: 180 },
+    { id: 5, name: "ชุมชนกำเนิดนพคุณ", x: 160, y: 140 }
+  ];
+
+  const [selectedPoint, setSelectedPoint] = useState(null);
+
+  return (
+    <Card className="w-full max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle>แผนที่จุดทิ้งขยะอำเภอบางสะพาน</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="relative">
+          {/* แผนที่อย่างง่าย */}
+          <svg viewBox="0 0 400 300" className="w-full border rounded-lg">
+            {/* พื้นหลังแผนที่ */}
+            <rect width="400" height="300" fill="#f0f0f0" />
+            
+            {/* เส้นถนนหลัก */}
+            <path d="M50 150 L350 150" stroke="#666" strokeWidth="3" fill="none" />
+            <path d="M200 50 L200 250" stroke="#666" strokeWidth="3" fill="none" />
+            
+            {/* แสดงจุดถังขยะ */}
+            {trashPoints.map((point) => (
+              <g key={point.id} onClick={() => setSelectedPoint(point)}>
+                <circle 
+                  cx={point.x} 
+                  cy={point.y} 
+                  r="6" 
+                  fill="#22c55e"
+                  className="cursor-pointer hover:fill-green-400"
+                />
+              </g>
+            ))}
+          </svg>
+
+          {/* แสดงรายละเอียดจุดที่เลือก */}
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold mb-2">จุดทิ้งขยะในพื้นที่:</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {trashPoints.map((point) => (
+                <div 
+                  key={point.id}
+                  className={`p-2 rounded flex items-center gap-2 cursor-pointer
+                    ${selectedPoint?.id === point.id ? 'bg-green-100' : 'hover:bg-gray-100'}`}
+                  onClick={() => setSelectedPoint(point)}
+                >
+                  <MapPin className="text-green-600" size={16} />
+                  <span>{point.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {selectedPoint && (
+            <div className="mt-4 p-4 bg-green-50 rounded-lg">
+              <h4 className="font-semibold">{selectedPoint.name}</h4>
+              <p className="text-sm text-gray-600">คลิกที่จุดบนแผนที่เพื่อดูรายละเอียดเพิ่มเติม</p>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default BangSaphanMap;
